@@ -1,0 +1,173 @@
+<div id="chats" class="content-section" style="display:none;">
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Conversations</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      display: flex;
+      height: 100vh;
+      flex-direction: column;
+    }
+    .chat-container {
+      display: flex;
+      flex: 1;
+    }
+    .conversations-list {
+      width: 30%;
+      border-right: 1px solid #ccc;
+      overflow-y: auto;
+      padding: 10px;
+    }
+    .conversation-item {
+      cursor: pointer;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+    .conversation-item:hover {
+      background-color: #f0f0f0;
+    }
+    .chat-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-messages {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+    }
+    .message {
+      margin-bottom: 15px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #eee;
+    }
+    .message small {
+      color: #999;
+    }
+    .chat-input {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #ccc;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      font-size: 1em;
+    }
+    .chat-input button {
+      padding: 10px 20px;
+      font-size: 1em;
+    }
+  </style>
+  <!-- Include jQuery for AJAX calls -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Include Socket.io client -->
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="chat-container">
+      <!-- Left Column: Conversation List -->
+      <div class="conversations-list">
+        <% conversations.forEach(function(conversation) { %>
+          <div class="conversation-item" data-id="<%= conversation.id %>">
+            <%= conversation.name %>
+          </div>
+        <% }); %>
+      </div>
+      <!-- Right Column: Chat Section -->
+      <div class="chat-section">
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chat-messages">
+          <p>Select a conversation to view messages...</p>
+        </div>
+        <!-- Chat Input -->
+        <div class="chat-input">
+          <input type="text" id="message-input" placeholder="Type your message here..." />
+          <button id="send-message">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Connect to Socket.io
+    var socket = io();
+    // Currently selected conversation's chat id
+    var currentChatId = null;
+    // Current user's phone number passed from the controller
+    var currentUserPhone = '<%= currentUserPhone %>';
+
+    $(document).ready(function() {
+      // Automatically join all conversation rooms on page load
+      $('.conversation-item').each(function() {
+        var chatId = $(this).data('id');
+        socket.emit('joinConversation', chatId);
+      });
+
+      // When a conversation is clicked, set it as active and load messages
+      $('.conversation-item').on('click', function() {
+        currentChatId = $(this).data('id');
+  
+        // Load conversation messages via AJAX
+        $.ajax({
+          url: '/messages/' + currentChatId,
+          method: 'GET',
+          success: function(data) {
+            var html = '';
+            if (data.messages && data.messages.length > 0) {
+              data.messages.forEach(function(message) {
+                html += '<div class="message">';
+                html += '<strong>' + message.sender_name + ':</strong> ' + message.message_text + '<br>';
+                html += '<small>' + new Date(message.sent_at).toLocaleString() + '</small>';
+                html += '</div>';
+              });
+            } else {
+              html = '<p>No messages found for this conversation.</p>';
+            }
+            $('#chat-messages').html(html);
+          },
+          error: function(xhr, status, error) {
+            console.error('Error fetching messages:', error);
+          }
+        });
+      });
+      
+      // When the Send button is clicked, send the message
+      $('#send-message').on('click', function() {
+        var messageText = $('#message-input').val().trim();
+        // Only send if there's a message and an active conversation is selected
+        if (!messageText || !currentChatId) return;
+  
+        // Emit the sendMessage event with conversation details
+        socket.emit('sendMessage', {
+          chatId: currentChatId,
+          sender_phone: currentUserPhone,
+          message_text: messageText
+        });
+        // Clear the message input after sending
+        $('#message-input').val('');
+      });
+      
+      // Listen for new messages from the server in real time
+      socket.on('newMessage', function(message) {
+        // Compare chat IDs as strings to avoid type mismatch issues
+        if (String(message.chat_id) === String(currentChatId)) {
+          var html = '<div class="message">';
+          html += '<strong>' + message.sender_name + ':</strong> ' + message.message_text + '<br>';
+          html += '<small>' + new Date(message.sent_at).toLocaleString() + '</small>';
+          html += '</div>';
+          $('#chat-messages').append(html);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

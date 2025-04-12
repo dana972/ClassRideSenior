@@ -1,0 +1,75 @@
+<div id="trips-history"  class="content-section" style="display: none;">
+
+  <h3>Trips History</h3>
+  <ul id="trip-list">
+      <!-- Trips will be dynamically inserted here -->
+  </ul>
+</div>
+
+<!-- Modal for displaying students and payment confirmation -->
+<div id="trip-modal" class="modal" style="display:none;">
+  <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h3>Trip Details</h3>
+      <p><strong>Date:</strong> <span id="modal-trip-date"></span></p>
+      <p><strong>Return:</strong> <span id="modal-trip-return"></span></p>
+      <p><strong>Destination:</strong> <span id="modal-trip-destination"></span></p>
+      <h4>Students</h4>
+      <ul id="student-list">
+          <!-- Students and payment confirmation will be dynamically inserted here -->
+      </ul>
+  </div>
+</div>
+
+<script>
+  // Example trip data
+  const trips = [
+      { id: 1, date: "2025-03-20", return: "Yes", destination: "University A", students: [
+          { name: "John Doe", paid: false },
+          { name: "Jane Smith", paid: true }
+      ]},
+      { id: 2, date: "2025-03-19", return: "No", destination: "University B", students: [
+          { name: "Alice Brown", paid: true },
+          { name: "Bob White", paid: false }
+      ]}
+  ];
+
+  // Populate trip list
+  const tripList = document.getElementById("trip-list");
+  trips.forEach(trip => {
+      let li = document.createElement("li");
+      li.innerHTML = `<a href="#" onclick="openTrip(${trip.id})">Trip ${trip.id} - ${trip.date} - ${trip.destination}</a>`;
+      tripList.appendChild(li);
+  });
+
+  // Open modal with trip details
+  function openTrip(tripId) {
+      const trip = trips.find(t => t.id === tripId);
+      document.getElementById("modal-trip-date").textContent = trip.date;
+      document.getElementById("modal-trip-return").textContent = trip.return;
+      document.getElementById("modal-trip-destination").textContent = trip.destination;
+      
+      const studentList = document.getElementById("student-list");
+      studentList.innerHTML = "";
+      trip.students.forEach(student => {
+          let li = document.createElement("li");
+          li.innerHTML = `${student.name} - <button onclick="confirmPayment('${student.name}', ${tripId})">${student.paid ? "Paid" : "Confirm Payment"}</button>`;
+          studentList.appendChild(li);
+      });
+      
+      document.getElementById("trip-modal").style.display = "block";
+  }
+
+  // Confirm payment
+  function confirmPayment(studentName, tripId) {
+      const trip = trips.find(t => t.id === tripId);
+      const student = trip.students.find(s => s.name === studentName);
+      student.paid = true;
+      openTrip(tripId);
+  }
+
+  // Close modal
+  function closeModal() {
+      document.getElementById("trip-modal").style.display = "none";
+  }
+</script>

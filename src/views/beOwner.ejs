@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bus Owner Application</title>
+</head>
+<body>
+  <h1>Apply to Become a Bus Owner</h1>
+  <% if (successMessage) { %>
+    <div style="padding: 10px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 5px; margin-bottom: 15px;">
+      <strong>✅ Success:</strong> <%= successMessage %>
+    </div>
+  <% } %>
+  
+  <form action="/owner/beOwner" method="POST" enctype="multipart/form-data">
+    <!-- Full Name (from logged-in user) -->
+    <div>
+      <label for="fullName">Full Name:</label>
+      <input type="text" id="fullName" name="fullName" value="<%= user.full_name %>" readonly />
+    </div>
+
+    <!-- Phone Number (from logged-in user) -->
+    <div>
+      <label for="phoneNumber">Phone Number:</label>
+      <input type="text" id="phoneNumber" name="phoneNumber" value="<%= user.phone_number %>" readonly />
+    </div>
+
+    <!-- Bus Board Number -->
+    <div>
+      <label for="boardNumber">Bus Board Number:</label>
+      <input type="text" id="boardNumber" name="boardNumber" required />
+    </div>
+
+    <!-- Bus Car Logo (Image Upload) -->
+    <div>
+      <label for="busLogo">Bus Car Logo:</label>
+      <input type="file" id="busLogo" name="busLogo" accept="image/*" required />
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit">Submit Application</button>
+  </form>
+</body>
+</html>

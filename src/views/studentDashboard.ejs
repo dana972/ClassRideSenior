@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sidebar with Dropdown Menu | CodingNepal</title>
+    
+    <!-- Linking Google Fonts for Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+<link rel="stylesheet" href="/assets/css/sidebar.css" />
+  <style>
+    .main-content {
+  padding-top: 140px; /* adjust based on attendance box height */
+}
+@media (max-width: 600px) {
+  .attendance-box {
+    width: 90%;
+    right: 5%;
+    top: 10px;
+  }
+}
+
+   table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+
+.attendance-box h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+/* Toggle Switch CSS */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  margin-right: 10px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  background-color: #ccc;
+  border-radius: 34px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: .4s;
+}
+.attendance-box {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 999;
+  padding: 20px;
+  border: 1px solid #ccc;
+  width: 250px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 26px;
+  width: 26px;
+  background-color: white;
+  left: 4px;
+  bottom: 4px;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #4CAF50;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+
+table th, table td {
+  border: 1px solid #ccc;
+  text-align: left;
+  padding: 10px;
+}
+
+table th {
+  background-color: #f2f2f2;
+}
+
+  </style>
+  </head>
+  <body>
+        <button class="sidebar-menu-button">
+          <span class="material-symbols-rounded">menu</span>
+        </button>
+    
+        <aside class="sidebar">
+          <header class="sidebar-header">
+            <a href="#" class="header-logo">
+              <i class="fas fa-bus white-icon"></i>
+              <h1 class="text-secondary display-6">ClassRide</h1>
+            </a>
+            
+            <button class="sidebar-toggler">
+              <span class="material-symbols-rounded">chevron_left</span>
+            </button>
+          </header>
+    
+          <nav class="sidebar-nav">
+            <ul class="nav-list primary-nav">
+              <li class="nav-item">
+                <a href="#" class="nav-link" data-target="dashboard">
+                  <span class="material-symbols-rounded">dashboard</span>
+                  <span class="nav-label">Your info</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link" data-target="manage-trips">
+                  <span class="material-symbols-rounded">calendar_today</span>
+                  <span class="nav-label">your assigned Trips for Tomorrow</span>
+                </a>
+              </li>
+           
+              <li class="nav-item">
+                <a href="#" class="nav-link" data-target="notifications">
+                  <span class="material-symbols-rounded">notifications</span>
+                  <span class="nav-label">Notifications</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link" data-target="chats">
+                  <span class="material-symbols-rounded">chat</span>
+                  <span class="nav-label">Chats</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./index.ejs" class="nav-link" data-target="home">
+                  <span class="material-symbols-rounded">home</span>
+                  <span class="nav-label">Home</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link" data-target="logout">
+                  <span class="material-symbols-rounded">logout</span>
+                  <span class="nav-label">Logout</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </aside>
+    
+        <div class="main-content">
+          
+            <!-- ✅ Attendance Box -->
+            <div class="attendance-box">
+              <h3>Are you attending tomorrow?</h3>
+              <label class="switch">
+                <input type="checkbox" id="attendanceToggle" <%= studentInfo.attendance === true ? 'checked' : '' %>>
+                <span class="slider round"></span>
+              </label>
+              
+              <p id="attendanceStatus">
+                You are <strong><%= studentInfo.attendance === true ? 'attending' : 'not attending' %></strong> tomorrow.
+              </p>
+                          </div>
+          <div id="dashboard" class="content-section" style="display:none;">
+            <h1>Hello, <%= userInfo.full_name %>!</h1>
+
+            <h2>Student Information</h2>
+<table border="1" cellpadding="10" cellspacing="0" id="student-info-table">
+  <thead>
+    <tr>
+      <th>Full Name</th>
+      <th>Phone Number</th>
+      <th>Location</th>
+      <th>Schedule</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><input type="text" id="fullName" value="<%= userInfo.full_name %>"></td>
+      <td><input type="text" id="phoneNumber" value="<%= studentInfo.phone_number %>" disabled></td>
+      <td><input type="text" id="location" value="<%= studentInfo.location %>"></td>
+      <td><input type="text" id="schedule" value="<%= studentInfo.schedule %>"></td>
+    </tr>
+  </tbody>
+</table>
+
+<button id="saveStudentInfo" style="margin-top: 10px;">Save Changes</button>
+<p id="updateStatus" style="color: green;"></p>
+
+          
+          
+          </div>
+          
+          
+          
+
+       
+   
+
+
+
+<%- include('./partials/notifications') %>
+<%- include('./partials/conversations') %>
+<%- include('./partials/logout') %>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const navLinks = document.querySelectorAll(".nav-link");
+    const contentSections = document.querySelectorAll(".content-section");
+
+    navLinks.forEach((link) => {
+      link.addEventListener("click", function (event) {
+        event.preventDefault(); // Prevent default link behavior
+
+        const targetId = this.getAttribute("data-target");
+
+        // Hide all content sections
+        contentSections.forEach((section) => {
+          section.style.display = "none";
+        });
+
+        // Show the targeted section
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+          targetSection.style.display = "block";
+        }
+      });
+    });
+  });
+</script>
+
+
+<script src="/assets/js/sidebar.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggle = document.getElementById("attendanceToggle");
+    const statusText = document.getElementById("attendanceStatus");
+
+    toggle.addEventListener("change", function (event) {
+      const isAttending = toggle.checked;
+
+      const confirmChange = confirm(`Are you sure you want to mark yourself as ${isAttending ? 'attending' : 'not attending'} tomorrow?`);
+      
+      if (!confirmChange) {
+        // ❌ Revert toggle state if cancelled
+        toggle.checked = !isAttending;
+        return;
+      }
+
+      // ✅ Continue with update if confirmed
+      statusText.innerHTML = `You are <strong>${isAttending ? 'attending' : 'not attending'}</strong> tomorrow.`;
+
+      fetch("/student/update-attendance", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ attending: isAttending })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (!data.success) {
+          alert("⚠️ Failed to update attendance.");
+        }
+      })
+      .catch(err => {
+        console.error("Error updating attendance:", err);
+        alert("❌ An error occurred while updating attendance.");
+      });
+    });
+  });
+</script>
+<script>
+  document.getElementById("saveStudentInfo").addEventListener("click", function () {
+    const fullName = document.getElementById("fullName").value;
+    const location = document.getElementById("location").value;
+    const schedule = document.getElementById("schedule").value;
+
+    fetch("/student/update-info", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ full_name: fullName, location, schedule })
+    })
+    .then(res => res.json())
+    .then(data => {
+      const msg = document.getElementById("updateStatus");
+      if (data.success) {
+        msg.textContent = "✅ Information updated successfully!";
+      } else {
+        msg.style.color = "red";
+        msg.textContent = "❌ Failed to update info.";
+      }
+    })
+    .catch(err => {
+      console.error("Update error:", err);
+      document.getElementById("updateStatus").textContent = "❌ Error occurred.";
+    });
+  });
+</script>
+
+  </body>
+</html>

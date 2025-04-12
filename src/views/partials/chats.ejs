@@ -1,0 +1,108 @@
+<!-- File: ./src/views/partials/chats.ejs -->
+<div id="chats-content">
+  <h1>Chats</h1>
+  <div class="chat-container">
+    <!-- Conversations List -->
+    <div class="conversations-list">
+      <% conversations.forEach(function(conversation) { %>
+        <div class="conversation-item" data-id="<%= conversation.id %>">
+          <%= conversation.name %>
+        </div>
+      <% }); %>
+    </div>
+    <!-- Chat Section -->
+    <div class="chat-section">
+      <div class="chat-messages" id="chat-messages">
+        <p>Select a conversation to view messages...</p>
+      </div>
+      <div class="chat-input">
+        <input type="text" id="message-input" placeholder="Type your message here..." />
+        <button id="send-message">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Connect to Socket.io
+  var socket = io();
+  var currentChatId = null;
+  var currentUserPhone = '<%= currentUserPhone %>';
+  
+  $(document).ready(function(){
+    // Log all conversation items and join each room
+    $('.conversation-item').each(function(){
+      var chatId = $(this).data('id');
+      console.log("Found conversation item:", $(this).text(), "with chat id:", chatId);
+      if(chatId) {
+         socket.emit('joinConversation', chatId);
+         console.log("Joined conversation room:", chatId);
+      } else {
+         console.log("No chat id found for this conversation item.");
+      }
+    });
+    
+    // Use delegated binding to catch clicks on conversation items
+    $(document).on('click', '.conversation-item', function(){
+      currentChatId = $(this).data('id');
+      console.log("Conversation clicked, chat id:", currentChatId);
+      
+      if (!currentChatId) {
+        console.error("Current chat id is missing. Cannot load messages.");
+        return;
+      }
+      
+      $.ajax({
+        url: '/messages/' + currentChatId,
+        method: 'GET',
+        success: function(data){
+          console.log("Messages received for chat id " + currentChatId + ":", data);
+          var html = '';
+          if(data.messages && data.messages.length > 0){
+            data.messages.forEach(function(message){
+              html += '<div class="message">';
+              html += '<strong>' + message.sender_name + ':</strong> ' + message.message_text + '<br>';
+              html += '<small>' + new Date(message.sent_at).toLocaleString() + '</small>';
+              html += '</div>';
+            });
+          } else {
+            html = '<p>No messages found for this conversation.</p>';
+          }
+          $('#chat-messages').html(html);
+        },
+        error: function(xhr, status, error){
+          console.error('Error fetching messages:', error);
+        }
+      });
+    });
+    
+    // When the Send button is clicked, send the message via Socket.io
+    $('#send-message').on('click', function(){
+      var messageText = $('#message-input').val().trim();
+      if (!messageText || !currentChatId) {
+        console.log("Cannot send message: missing message text or chat id.");
+        return;
+      }
+      
+      console.log("Sending message to chat id", currentChatId, ":", messageText);
+      socket.emit('sendMessage', {
+        chatId: currentChatId,
+        sender_phone: currentUserPhone,
+        message_text: messageText
+      });
+      $('#message-input').val('');
+    });
+    
+    // Listen for new messages from the server
+    socket.on('newMessage', function(message){
+      console.log("Received new message:", message);
+      if(String(message.chat_id) === String(currentChatId)){
+        var html = '<div class="message">';
+        html += '<strong>' + message.sender_name + ':</strong> ' + message.message_text + '<br>';
+        html += '<small>' + new Date(message.sent_at).toLocaleString() + '</small>';
+        html += '</div>';
+        $('#chat-messages').append(html);
+      }
+    });
+  });
+</script>

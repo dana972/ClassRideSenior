@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Manage Trips</title>
+  <link rel="stylesheet" href="/assets/css/manageTrips.css" />
+</head>
+<body>
+
+<div id="manage-trips" class="content-section">
+  <h3>Manage Trips for Tomorrow</h3>
+  <p>Here is where you manage your trips for tomorrow.</p>
+
+  <!-- ✅ Trip Cards -->
+  <h3>Scheduled Trips</h3>
+  <div id="trip-cards">
+    <!-- Populated dynamically -->
+  </div>
+
+  <!-- ✅ Trip Details Modal -->
+  <div id="tripDetailsModal" class="manage-trips-modal" style="display: none;">
+    <div class="manage-trips-modal-content" style="width: 500px;">
+      <span class="manage-trips-close" id="closeTripDetails">&times;</span>
+      <h2>Trip Details</h2>
+      <div id="tripDetailsContent">
+        <!-- Populated dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Student Info Modal -->
+  <div id="studentInfoModal" class="manage-trips-modal" style="display: none;">
+    <div class="manage-trips-modal-content" style="width: 400px;">
+      <span class="manage-trips-close" id="closeStudentInfo">&times;</span>
+      <h3>Student Info</h3>
+      <div id="studentInfoContent">
+        <!-- Filled dynamically with JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Create Trip Button -->
+  <button id="openTripForm" class="manage-trips-btn">Create Trip</button>
+
+  <!-- ✅ Trip Form Modal -->
+  <div id="tripFormModal" class="manage-trips-modal" style="display: none;">
+    <div class="manage-trips-modal-content">
+      <span class="manage-trips-close" id="closeTripForm">&times;</span>
+      <h2>Create a New Trip</h2>
+      <form id="tripForm">
+        <label for="bus">Select Bus:</label>
+        <select id="bus" name="bus_id" required>
+          <% buses.forEach(bus => { %>
+            <option value="<%= bus.bus_id %>"><%= bus.bus_name %></option>
+          <% }) %>
+        </select>
+
+        <label for="driver">Assign Driver:</label>
+        <select id="driver" name="driver_phone" required>
+          <% drivers.forEach(driver => { %>
+            <option value="<%= driver.phone_number %>"><%= driver.full_name %></option>
+          <% }) %>
+        </select>
+
+        <label for="destination">Destination:</label>
+        <select id="destination" name="destination_id" required>
+          <% destinations.forEach(destination => { %>
+            <option value="<%= destination.destination_id %>"><%= destination.name %></option>
+          <% }) %>
+        </select>
+
+        <label for="pickup_time">Pickup Time:</label>
+        <input type="time" id="pickup_time" name="pickup_time" required>
+
+        <label for="type">Trip Type:</label>
+        <select id="type" name="type" required>
+          <option value="morning">Morning</option>
+          <option value="return">Return</option>
+        </select>
+
+        <label for="dropoff_time">Dropoff Time:</label>
+        <input type="time" id="dropoff_time" name="dropoff_time" required>
+
+        <button type="submit" class="manage-trips-btn">Submit</button>
+      </form>
+    </div>
+  </div>
+<!-- Chat Overlay -->
+<div id="chatOverlayModal" style="display:none;">
+  <div id="chatOverlayHeader"></div>
+  <div id="chatOverlayMessages" class="chat-messages"></div>
+  <input id="chatOverlayInput" placeholder="Type message..." />
+  <button id="chatOverlaySendBtn">Send</button>
+  <button id="closeChatOverlay">Close</button>
+</div>
+
+
+  <!-- ✅ Student Lists -->
+  <h3>Students by Destination</h3>
+  <div id="student-lists"></div>
+</div>
+
+<!-- ✅ JS scripts -->
+<script src="/assets/js/manageTrips.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  // Optional: expose logged-in user's phone globally for chat logic (if not already done)
+  window.currentUser = {
+    phone_number: "<%= typeof user !== 'undefined' ? user.phone_number : '' %>",
+    role: "<%= typeof user !== 'undefined' ? user.role : '' %>"
+  };
+</script>
+
+</body>
+</html>

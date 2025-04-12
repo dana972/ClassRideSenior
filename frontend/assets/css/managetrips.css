@@ -1,0 +1,147 @@
+.manage-trips-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .manage-trips-modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .manage-trips-close {
+    float: right;
+    cursor: pointer;
+  }
+  .manage-trips-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .manage-trips-btn:hover {
+    background: #0056b3;
+  }
+  .manage-trips-destination-group {
+    margin-top: 20px;
+  }
+  .manage-trips-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  .manage-trips-table th, .manage-trips-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  .manage-trips-table th {
+    background-color: #f2f2f2;
+  }
+  .trip-card {
+    background-color: #e9f5ff;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 160px;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    transition: background-color 0.2s;
+  }
+  .trip-card:hover {
+    background-color: #d0eaff;
+  }
+  #trip-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 10px 0 20px;
+  }
+  #manage-trips {
+    position: relative; /* 🔑 Make this the positioning context */
+  }
+  
+  /* ✅ Floating modal inside the right of manage-trips section */
+  .chat-overlay {
+    position: absolute;
+    top: 100px;
+    right: 0;
+    width: 300px;
+    max-height: 400px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+  }
+  
+  .chat-overlay-header {
+    background: #f1f1f1;
+    padding: 10px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+  
+  .chat-overlay-close {
+    cursor: pointer;
+    font-size: 18px;
+    color: #888;
+  }
+  
+  .chat-overlay-messages {
+    padding: 10px;
+    overflow-y: auto;
+    flex: 1;
+    max-height: 200px;
+    font-size: 14px;
+  }
+  
+  .chat-overlay-inputs {
+    display: flex;
+    border-top: 1px solid #ccc;
+  }
+  
+  #chatOverlayInput {
+    flex: 1;
+    border: none;
+    padding: 8px;
+    border-bottom-left-radius: 12px;
+    outline: none;
+  }
+  
+  #chatOverlaySendBtn {
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    padding: 0 16px;
+    border-bottom-right-radius: 12px;
+    cursor: pointer;
+  }
+  
+  @media (max-width: 768px) {
+    .chat-overlay {
+      position: fixed;
+      right: 10px;
+      bottom: 10px;
+      top: auto;
+      width: 90%;
+      z-index: 9999;
+    }
+  }
+  

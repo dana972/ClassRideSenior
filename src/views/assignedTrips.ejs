@@ -1,0 +1,72 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Your Assigned Trips</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/assets/css/sidebar.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f7f7f7;
+    }
+
+    h1 {
+      margin-bottom: 2rem;
+    }
+
+    .trip-card {
+      background-color: #fff;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+
+    .trip-card h2 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .trip-detail {
+      margin: 0.5rem 0;
+    }
+
+    .no-trip {
+      font-style: italic;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hello <%= user.full_name %>, here are your assigned trips for tomorrow</h1>
+
+  <!-- 🌅 Morning Trip -->
+  <div class="trip-card">
+    <h2>Morning Trip</h2>
+    <% if (morningTrip) { %>
+      <p class="trip-detail"><strong>Pickup Location:</strong> <%= morningTrip.pickup_location %></p>
+      <p class="trip-detail"><strong>Pickup Time:</strong> <%= morningTrip.pickup_time %></p>
+      <p class="trip-detail"><strong>Bus Number:</strong> <%= morningTrip.bus_number %></p>
+      <p class="trip-detail"><strong>Driver:</strong> <%= morningTrip.driver_name %></p>
+    <% } else { %>
+      <p class="no-trip">No morning trip assigned.</p>
+    <% } %>
+  </div>
+
+  <!-- 🌇 Return Trip -->
+  <div class="trip-card">
+    <h2>Return Trip</h2>
+    <% if (returnTrip) { %>
+      <p class="trip-detail"><strong>Drop Location:</strong> <%= returnTrip.drop_location %></p>
+      <p class="trip-detail"><strong>Pickup Time:</strong> <%= returnTrip.pickup_time %></p>
+      <p class="trip-detail"><strong>Bus Number:</strong> <%= returnTrip.bus_number %></p>
+      <p class="trip-detail"><strong>Driver:</strong> <%= returnTrip.driver_name %></p>
+    <% } else { %>
+      <p class="no-trip">No return trip assigned.</p>
+    <% } %>
+  </div>
+</body>
+</html> -->

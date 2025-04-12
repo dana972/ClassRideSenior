@@ -1,0 +1,45 @@
+<!-- Modal for adding a Bus -->
+<div id="addBusModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <h3>Add New Bus</h3>
+    <form id="addBusForm">
+      <label for="busName">Bus Name:</label>
+      <input type="text" id="busName" name="busName" required />
+    
+      <label for="capacity">Capacity:</label>
+      <input type="number" id="capacity" name="capacity" required />
+    
+      <button type="submit" class="submit-button">Add Bus</button>
+    </form>
+    
+  </div>
+</div>
+<script>
+  document.getElementById('addBusForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const busName = document.getElementById('busName').value;
+    const capacity = document.getElementById('capacity').value;
+
+    fetch('/owner/dashboard/bus', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ busName, capacity })
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Failed to add bus");
+      return res.json();
+    })
+    .then(data => {
+      alert(data.message || 'Bus added!');
+      location.reload(); // Refresh to show the new bus
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Error adding bus');
+    });
+  });
+</script>

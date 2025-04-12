@@ -1,0 +1,48 @@
+<!-- Modal for adding a Destination -->
+<div id="addDestinationModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close-modal" onclick="closeModal('addDestinationModal')">&times;</span>
+      <h3>Add New Destination</h3>
+      <form id="addDestinationForm">
+        <label for="destinationName">Destination Name:</label>
+        <input type="text" id="destinationName" name="destinationName" required />
+      
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" required />
+      
+        <button type="submit" class="submit-button">Add Destination</button>
+      </form>
+      
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('addDestinationForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const destinationName = document.getElementById('destinationName').value;
+  const destinationLocation = document.getElementById('location').value;
+
+  fetch('/owner/dashboard/destination', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ destinationName, location: destinationLocation })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Failed to add destination");
+    return res.json();
+  })
+  .then(data => {
+    alert(data.message || 'Destination added!');
+    window.location.reload(); // ✅ use window.location.reload explicitly
+  })
+  .catch(err => {
+    console.error('Error adding destination:', err);
+    alert('Error adding destination');
+  });
+});
+
+  </script>
+  
