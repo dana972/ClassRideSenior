@@ -14,6 +14,8 @@ const dashboardRoutes = require("./src/routes/dashboardRoutes");
 const studentDashboardRoute = require("./src/routes/studentDashboardRoute");
 const chatRoutes = require("./src/routes/chatsRoutes");
 const beOwnerRoutes = require("./src/routes/beOwnerRoutes");
+const chatbotRoutes = require("./src/routes/chatbotRoutes");
+
 
 
 
@@ -44,6 +46,7 @@ app.use((req, res, next) => {
 // Routes
 app.get("/", (req, res) => res.render("index"));
 app.use("/api", authRoutes); // login/register
+app.use("/api/chatbot", chatbotRoutes);
 
 // Protected routes
 app.use("/owner", authenticateUser, busOwnerRoutes);
